@@ -25,11 +25,10 @@ function list_categories() {
 }
 
 function list_tools_in_category() {
-
-    header "$1 Tools"
     local category=$1
     local prefix="blackarch-"
     category=${category#"$prefix"}
+    header "Blackarch $category Tools"
     pacman -Qg | grep $prefix$category | awk '{print $2}' | sort
 }
 
