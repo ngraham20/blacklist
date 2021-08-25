@@ -18,10 +18,19 @@ function header() {
     echo "${bar// /-}"
     echo -e "$(date)\n"
 }
+
+function columnize() {
+    local name=$1[@]
+    local data=("${!name}")
+    for value in "${data[@]}"; do
+        printf "%-8s\n" "${value}"
+    done | column
+}
 function list_categories() {
     # list blackarch groups
     header "Blackarch Categories"
-    pacman -Qg | grep blackarch- | awk '{print $1}' | sort | uniq -c
+    local output=$(pacman -Qg | grep blackarch- | awk '{print $1}' | sort | uniq -c)
+    columnize output
 }
 
 function list_tools_in_category() {
@@ -29,7 +38,8 @@ function list_tools_in_category() {
     local prefix="blackarch-"
     category=${category#"$prefix"}
     header "Blackarch $category Tools"
-    pacman -Qg | grep $prefix$category | awk '{print $2}' | sort
+    local output=$(pacman -Qg | grep $prefix$category | awk '{print $2}' | sort)
+    columnize output
 }
 
 if [ $# -eq 0 ]; then
